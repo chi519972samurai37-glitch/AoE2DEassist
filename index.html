@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>巨大猪帝国时代II小助手</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="site-bar" id="siteBar" hidden>
+    <button class="home-button" type="button" data-view="home">巨大猪帝国时代II小助手</button>
+    <nav class="view-nav" aria-label="功能导航">
+      <button type="button" data-view="civilizations">文明图鉴</button>
+      <button type="button" data-view="units">兵种克制</button>
+      <button type="button" data-view="economy">经济计算</button>
+      <button type="button" data-view="builds">基础知识</button>
+      <button type="button" data-view="mistakes">玩家生态</button>
+      <button type="button" data-view="operations">云玩之家</button>
+    </nav>
+  </header>
+
+  <main class="app">
+    <section class="home-view active" id="view-home" data-view-panel="home" aria-labelledby="homeTitle">
+      <div class="home-card">
+        <div class="home-left">
+          <h1 id="homeTitle">巨大猪帝国时代II小助手</h1>
+          <form class="home-search" id="homeSearchForm" role="search">
+            <label for="homeSearchInput">搜索文明、兵种、基础知识、玩家生态</label>
+            <div class="search-box">
+              <input id="homeSearchInput" type="search" autocomplete="off" placeholder="例如：法兰克、骑士、红帽子、DLC">
+              <button type="submit">搜索</button>
+            </div>
+          </form>
+        </div>
+        <div class="home-entrances" aria-label="功能入口">
+          <button type="button" data-view="civilizations">
+            <span>文明图鉴</span>
+          </button>
+          <button type="button" data-view="units">
+            <span>兵种克制</span>
+          </button>
+          <button type="button" data-view="economy">
+            <span>经济计算</span>
+          </button>
+          <button type="button" data-view="builds">
+            <span>基础知识</span>
+          </button>
+          <button type="button" data-view="mistakes">
+            <span>玩家生态</span>
+          </button>
+          <button type="button" data-view="operations">
+            <span>云玩之家</span>
+          </button>
+        </div>
+      </div>
+      <p class="home-credit">资料版本：AOE2DE Update 177723 / Minor 180059 · 页面与原创素材 © 2026 巨大猪 · 非官方站点</p>
+    </section>
+
+    <section class="content-view" id="view-search" data-view-panel="search" aria-labelledby="searchTitle">
+      <div class="view-frame">
+        <div class="view-title">
+          <h2 id="searchTitle">搜索结果</h2>
+        </div>
+        <form class="module-search" id="moduleSearchForm" role="search">
+          <input id="moduleSearchInput" type="search" autocomplete="off" placeholder="法兰克、骑士、红帽子、DLC">
+          <button type="submit">搜索</button>
+        </form>
+        <div class="result-list" id="searchResults"></div>
+      </div>
+    </section>
+
+    <section class="content-view" id="view-civilizations" data-view-panel="civilizations" aria-labelledby="civilizationsTitle">
+      <div class="view-frame civ-frame">
+        <div class="view-title">
+          <h2 id="civilizationsTitle">文明图鉴</h2>
+        </div>
+        <div class="civ-module" id="civModule">
+          <div class="civ-mode-tabs" role="tablist" aria-label="文明图鉴内容">
+            <button type="button" role="tab" aria-selected="true" data-civ-mode="techtree">科技树</button>
+            <button type="button" role="tab" aria-selected="false" data-civ-mode="winrates">胜率排行</button>
+            <button type="button" role="tab" aria-selected="false" data-civ-mode="guides">文明解读</button>
+          </div>
+
+          <section class="civ-mode-panel active" data-civ-mode-panel="techtree" aria-label="科技树">
+            <div class="civ-workspace">
+              <aside class="civ-sidebar">
+                <label class="mini-search civ-search" for="techCivSearch">
+                  <span>搜索文明</span>
+                  <input id="techCivSearch" type="search" autocomplete="off" placeholder="输入文明名">
+                </label>
+                <div class="sidebar-title">选择文明</div>
+                <div id="techCivList"></div>
+              </aside>
+              <div class="tech-area">
+                <div class="tech-toolbar">
+                  <div>
+                    <h3 id="techCivName">科技树</h3>
+                    <p id="techCivMeta"></p>
+                  </div>
+                  <div class="legend" id="techLegend"></div>
+                </div>
+                <div class="tech-scroll" id="techTreeCanvas" aria-label="科技树横向滚动区域"></div>
+              </div>
+              <aside class="node-detail" id="nodeDetail" aria-label="项目详情"></aside>
+            </div>
+          </section>
+
+          <section class="civ-mode-panel" data-civ-mode-panel="winrates" aria-label="胜率排行">
+            <div class="ranking-head">
+              <div class="ranking-title-line">
+                <div>
+                  <h3>全民族胜率排行</h3>
+                  <p id="rankingSource"></p>
+                  <a class="ranking-source-link" id="rankingSourceLink" href="https://empirestats.online/civs" target="_blank" rel="noopener">查看 EmpireStats 原始统计</a>
+                </div>
+                <label class="mini-search ranking-search" for="rankingSearchInput">
+                  <span>搜索文明 / 地图</span>
+                  <input id="rankingSearchInput" type="search" autocomplete="off" placeholder="中国 / Arabia">
+                </label>
+              </div>
+              <div class="ranking-filter-grid">
+                <label class="select-field">
+                  <span>模式</span>
+                  <select id="rankingQueueSelect"></select>
+                </label>
+                <label class="select-field">
+                  <span>时长</span>
+                  <select id="rankingDurationSelect"></select>
+                </label>
+                <label class="select-field">
+                  <span>分段</span>
+                  <select id="rankingEloSelect"></select>
+                </label>
+                <label class="select-field">
+                  <span>地图</span>
+                  <select id="rankingMapSelect"></select>
+                </label>
+              </div>
+              <div class="ranking-search-hint" id="rankingSearchHint"></div>
+            </div>
+            <div class="ranking-table-wrap">
+              <table class="ranking-table">
+                <thead>
+                  <tr>
+                    <th>排名</th>
+                    <th>文明</th>
+                    <th>胜率</th>
+                    <th>使用率</th>
+                    <th>样本</th>
+                  </tr>
+                </thead>
+                <tbody id="rankingRows"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="civ-mode-panel" data-civ-mode-panel="guides" aria-label="文明解读">
+            <div class="civ-workspace guide-workspace">
+              <aside class="civ-sidebar">
+                <label class="mini-search civ-search" for="guideCivSearch">
+                  <span>搜索文明</span>
+                  <input id="guideCivSearch" type="search" autocomplete="off" placeholder="输入文明名">
+                </label>
+                <div class="sidebar-title">选择文明</div>
+                <div id="guideCivList"></div>
+              </aside>
+              <article class="civ-guide-detail" id="guideDetail"></article>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-view" id="view-units" data-view-panel="units" aria-labelledby="unitsTitle">
+      <div class="view-frame">
+        <div class="view-title">
+          <h2 id="unitsTitle">兵种克制</h2>
+        </div>
+        <div class="unit-list" id="unitList"></div>
+      </div>
+    </section>
+
+    <section class="content-view" id="view-economy" data-view-panel="economy" aria-labelledby="economyTitle">
+      <div class="view-frame">
+        <div class="view-title">
+          <h2 id="economyTitle">经济计算</h2>
+        </div>
+        <div class="economy-tool" id="economyCalculator"></div>
+      </div>
+    </section>
+
+    <section class="content-view" id="view-builds" data-view-panel="builds" aria-labelledby="buildsTitle">
+      <div class="view-frame basic-frame">
+        <div class="basic-knowledge" id="basicKnowledgeRoot"></div>
+      </div>
+    </section>
+
+    <section class="content-view" id="view-mistakes" data-view-panel="mistakes" aria-labelledby="mistakesTitle">
+      <div class="view-frame basic-frame ecology-frame">
+        <div class="player-ecology basic-knowledge" id="playerEcologyRoot"></div>
+      </div>
+    </section>
+
+    <section class="content-view" id="view-operations" data-view-panel="operations" aria-labelledby="operationsTitle">
+      <div class="view-frame">
+        <div class="view-title">
+          <h2 id="operationsTitle">云玩之家</h2>
+          <p>目前功能还在开发中。后续接入问答助手、模拟考试和网页斗蛐蛐。</p>
+        </div>
+        <div class="card-grid" id="operationGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>玩家自用资料整理，非官方站点。</p>
+  </footer>
+
+  <script src="database/techtree_data.js"></script>
+  <script src="database/civ_stats_data.js"></script>
+  <script src="database/civ_guides_data.js"></script>
+  <script src="database/counter_units_data.js"></script>
+  <script src="database/basic_knowledge_data.js"></script>
+  <script src="database/player_ecology_data.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
